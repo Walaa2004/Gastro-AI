@@ -1,10 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using ServicesAbstraction;
 using Shared.Authentication;
-using Shared.DTO; // تأكد إنك ضفت الـ AddressDto هنا لو هتستخدمه
-using System.Security.Claims;
-using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
@@ -12,25 +8,23 @@ namespace Presentation.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationService _authService;
+        private readonly IAuthenticationService _authenticationService;
 
-        // حقن السيرفس مباشرة
-        public AuthenticationController(IAuthenticationService authService)
+        public AuthenticationController(IAuthenticationService authenticationService)
         {
-            _authService = authService;
+            _authenticationService = authenticationService;
         }
 
-        // 1. تسجيل الدخول (مشترك للكل)
         [HttpPost("login")]
-        public async Task<ActionResult<UserResponse>> Login(LoginRequest request)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            // السيرفس هي اللي هترمي Exception لو الباسورد غلط
-            // والمفروض عندك Middleware يتعامل مع الـ Exceptions
-            // بس للتبسيط ممكن نستخدم try-catch هنا
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
-                var result = await _authService.LoginAsync(request);
-                return Ok(result);
+                var response = await _authenticationService.LoginAsync(loginRequest);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -38,14 +32,16 @@ namespace Presentation.Controllers
             }
         }
 
-        // 2. تسجيل مريض جديد
         [HttpPost("register/patient")]
-        public async Task<ActionResult<UserResponse>> RegisterPatient(RegisterPatientRequest request)
+        public async Task<IActionResult> RegisterPatient([FromBody] RegisterPatientRequest request)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
-                var result = await _authService.RegisterPatientAsync(request);
-                return Ok(result);
+                var response = await _authenticationService.RegisterPatientAsync(request);
+                return Ok(response);
             }
             catch (Exception ex)
             {
@@ -53,41 +49,42 @@ namespace Presentation.Controllers
             }
         }
 
-        // 3. تسجيل دكتور جديد (هنا بيتم التحقق من الرخصة داخل السيرفس)
         [HttpPost("register/doctor")]
-        public async Task<ActionResult<UserResponse>> RegisterDoctor(RegisterDoctorRequest request)
+        public async Task<IActionResult> RegisterDoctor([FromBody] RegisterDoctorRequest request)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
             try
             {
-                var result = await _authService.RegisterDoctorAsync(request);
-                return Ok(result);
+                var response = await _authenticationService.RegisterDoctorAsync(request);
+                return Ok(response);
             }
             catch (Exception ex)
             {
-                // لو الرخصة مستخدمة قبل كدة، السيرفس هترمي Exception والرسالة هتظهر هنا
                 return BadRequest(new { message = ex.Message });
             }
         }
 
-        // 4. التحقق من وجود الإيميل (مفيد للفرونت إند)
-        [HttpGet("emailexists")]
-        public async Task<ActionResult<bool>> CheckEmail(string email)
+        [HttpGet("check-email/{email}")]
+        public async Task<IActionResult> CheckEmail(string email)
         {
-            return Ok(await _authService.CheckEmailAsync(email));
+            var exists = await _authenticationService.CheckEmailAsync(email);
+            return Ok(new { exists });
         }
 
-        // 5. جلب بيانات المستخدم الحالي (يتطلب توكن)
-        [Authorize]
-        [HttpGet("current-user")]
-        public async Task<ActionResult<UserResponse>> GetCurrentUser()
+        [HttpGet("user/{email}")]
+        public async Task<IActionResult> GetUserByEmail(string email)
         {
-            // بنجيب الإيميل من التوكن
-            var email = User.FindFirstValue(ClaimTypes.Email);
-
-            if (string.IsNullOrEmpty(email)) return Unauthorized();
-
-            var user = await _authService.GetUserByEmailAsync(email);
-            return Ok(user);
+            try
+            {
+                var user = await _authenticationService.GetUserByEmailAsync(email);
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(new { message = ex.Message });
+            }
         }
     }
 }

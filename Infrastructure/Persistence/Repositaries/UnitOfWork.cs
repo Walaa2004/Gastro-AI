@@ -18,6 +18,8 @@ namespace Persistence.Repositaries
         public IGenericRepository<MedicalRecord> MedicalRecords { get; private set; }
         public IGenericRepository<Report> Reports { get; private set; }
         public IGenericRepository<Chat> Chats { get; private set; }
+        public IGenericRepository<Message> Messages { get; private set; }
+        public IGenericRepository<AIResult> AIResults { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context)
         {
@@ -28,6 +30,8 @@ namespace Persistence.Repositaries
             MedicalRecords = new GenericRepository<MedicalRecord>(_context);
             Reports = new GenericRepository<Report>(_context);
             Chats = new GenericRepository<Chat>(_context);
+            Messages = new GenericRepository<Message>(_context);
+            AIResults = new GenericRepository<AIResult>(_context);
         }
 
         public async Task<int> CompleteAsync()

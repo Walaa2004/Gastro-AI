@@ -54,7 +54,8 @@ namespace Services
                 Email = request.Email,
                 UserName = request.Email.Split('@')[0],
                 DisplayName = $"{request.FirstName} {request.LastName}",
-                PhoneNumber = request.PhoneNum
+                PhoneNumber = request.PhoneNum,
+                UserType = "Patient"
             };
 
             var createdUser = await _userManager.CreateAsync(user, request.Password);
@@ -77,7 +78,8 @@ namespace Services
                     Height = request.Height,
                     BloodType = request.BloodType,
                     Allergies = request.Allergies,
-                    ProfilePhoto = request.ProfilePhoto
+                    ProfilePhoto = request.ProfilePhoto,
+                    UserId = user.Id
                 };
 
                 await _unitOfWork.Patients.AddAsync(patient);
@@ -112,7 +114,8 @@ namespace Services
                 Email = request.Email,
                 UserName = request.Email.Split('@')[0],
                 DisplayName = $"{request.FirstName} {request.LastName}",
-                PhoneNumber = request.PhoneNum
+                PhoneNumber = request.PhoneNum,
+                UserType = "Doctor"
             };
 
             var createdUser = await _userManager.CreateAsync(user, request.Password);
@@ -135,7 +138,8 @@ namespace Services
                     About = request.About,
                     YearsOfExperience = request.YearsOfExperience,
                     ProfilePhoto = request.ProfilePhoto,
-                    Rating = 0.0
+                    Rating = 0.0,
+                    UserId = user.Id
                 };
 
                 await _unitOfWork.Doctors.AddAsync(doctor);

@@ -14,7 +14,8 @@ namespace Domain.Contracts
         IGenericRepository<MedicalRecord> MedicalRecords { get; }
         IGenericRepository<Report> Reports { get; }
         IGenericRepository<Chat> Chats { get; }
-
+        IGenericRepository<AIResult> AIResults { get; }
+        IGenericRepository<Message> Messages { get; }
         Task<int> CompleteAsync();
     }
 }

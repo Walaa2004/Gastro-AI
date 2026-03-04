@@ -60,6 +60,13 @@ namespace GraduationProject
             builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<ServicesAbstraction.IAuthenticationService, Services.AuthenticationService>();
+            builder.Services.AddScoped<ServicesAbstraction.IPatientService, Services.PatientService>();
+            builder.Services.AddScoped<ServicesAbstraction.IDoctorService, Services.DoctorService>();
+            builder.Services.AddScoped<ServicesAbstraction.IMedicalRecordService, Services.MedicalRecordService>();
+            builder.Services.AddScoped<ServicesAbstraction.IReportService, Services.ReportService>();
+            builder.Services.AddScoped<ServicesAbstraction.IChatService, Services.ChatService>();
+            builder.Services.AddScoped<ServicesAbstraction.IMessageService, Services.MessageService>();
+            builder.Services.AddScoped<ServicesAbstraction.IAIResultService, Services.AIResultService>();
             builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             builder.Services.AddControllers()
                 .AddApplicationPart(typeof(AuthenticationController).Assembly);
@@ -114,6 +121,8 @@ namespace GraduationProject
                 app.UseSwaggerUI(options =>
                 {
                     options.DocumentTitle = "GastroAI API";
+                    options.SwaggerEndpoint("/swagger/v1/swagger.json", "GastroAI API v1");
+
                 });
             }
 
@@ -126,7 +135,11 @@ namespace GraduationProject
             app.UseAuthorization();
 
             app.MapControllers();
-
+            using (var scope = app.Services.CreateScope())
+            {
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                await RoleSeeder.SeedRolesAsync(roleManager);
+            }
             app.Run();
         }
     }
