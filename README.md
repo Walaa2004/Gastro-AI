@@ -1,15 +1,8 @@
 # GastroAI — AI-Powered Gastrointestinal Disease Detection System
 
-> Bridging the gap between patients and specialist doctors through Artificial Intelligence — making healthcare accessible for everyone, everywhere.
-
-![ASP.NET Web API](https://img.shields.io/badge/ASP.NET_Web_API-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
-![Entity Framework](https://img.shields.io/badge/Entity_Framework-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
-![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=black)
-![Machine Learning](https://img.shields.io/badge/Machine_Learning-FF6F00?style=for-the-badge&logo=python&logoColor=white)
+ Bridging the gap between patients and specialist doctors through Artificial Intelligence — making healthcare accessible for everyone, everywhere.
 
 ---
-
 ## About The Project
 
 **GastroAI** is an intelligent medical web platform that integrates a **Machine Learning model** for early detection of **8 gastrointestinal diseases** — built to bridge the gap between patients and specialist doctors, especially in underserved areas where access to specialists is limited.
@@ -142,8 +135,4 @@ https://localhost:{port}/swagger
 ---
 
 ## Contact
-
-**Walaa Ahmed** — Backend Developer
-
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](www.linkedin.com/in/walaa-ahmed2004)
-[![GitHub](https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Walaa2004)
+Walaa Ahmed — [www.linkedin.com/in/walaa-ahmed2004]
